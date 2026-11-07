@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divine — a god game of tribes on a small world</title>
+<meta name="description" content="Watch, guide, judge. A god game on a small round world: ten tribes, their fires and their warriors, and ten civilisations' stories told as an old picture book.">
+<meta property="og:title" content="Divine">
+<meta property="og:description" content="A god game of tribes on a small round world. Watch, guide, judge.">
+<meta property="og:image" content="assets/01-title.jpg">
+<style>
+  :root {
+    --bg:#0d0f1a; --panel:#151827; --panel2:#1b1f33; --ink:#eceaf2;
+    --dim:#a3a6bd; --gold:#e3b75a; --violet:#9a8cf0; --line:#262a40;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f7f6f2; --panel:#fff; --panel2:#efeef5; --ink:#191b2a;
+            --dim:#5d6075; --gold:#966f1c; --violet:#5b4fc0; --line:#dfdee8; }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 22px; }
+  header.top {
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    padding:22px 0; border-bottom:1px solid var(--line);
+  }
+  .logo { font-weight:700; letter-spacing:.24em; font-size:.86rem; flex:1 1 auto; }
+  header.top nav a { color:var(--dim); text-decoration:none; font-size:.9rem; margin-left:18px; }
+  header.top nav a:hover { color:var(--gold); }
+
+  .hero { padding:74px 0 56px; text-align:center; }
+  .hero h1 {
+    margin:0 0 14px; font-size:clamp(2.4rem,7vw,4.2rem); line-height:1.02;
+    letter-spacing:-.025em; font-weight:800;
+  }
+  .hero h1 .accent { color:var(--gold); }
+  .hero p.tag { margin:0 auto 30px; max-width:34em; font-size:1.14rem; color:var(--dim); }
+  .cta { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .cta a {
+    display:inline-block; text-decoration:none; border-radius:999px;
+    padding:11px 24px; font-size:.95rem; font-weight:600;
+    border:1px solid var(--line); color:var(--ink); background:var(--panel);
+  }
+  .cta a.primary { background:var(--gold); border-color:var(--gold); color:#17191f; }
+  .cta a:hover { border-color:var(--gold); }
+
+  figure { margin:0; }
+  figure img {
+    display:block; width:100%; height:auto; border-radius:12px;
+    border:1px solid var(--line); background:var(--panel2);
+  }
+  figcaption { margin-top:10px; font-size:.9rem; color:var(--dim); text-align:center; }
+  .shot { margin:0 0 34px; }
+  .gallery { display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(272px,1fr)); }
+  .gallery figcaption { margin-top:9px; font-size:.86rem; }
+
+  section { padding:52px 0; border-top:1px solid var(--line); }
+  h2 { font-size:clamp(1.5rem,3.6vw,2rem); margin:0 0 18px; letter-spacing:-.02em; }
+  .lede { font-size:1.06rem; color:var(--dim); max-width:44em; margin:0 0 28px; }
+  .cols { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:18px; }
+  .card p { margin:0; font-size:.94rem; color:var(--dim); }
+  .card p + p { margin-top:9px; }
+  .card .who { color:var(--ink); font-weight:650; margin:0 0 2px; }
+  .card .role { font-size:.76rem; letter-spacing:.13em; color:var(--gold);
+                text-transform:uppercase; margin:0 0 9px; }
+  .stat { display:flex; gap:34px; flex-wrap:wrap; margin:0 0 26px; padding:0; list-style:none; }
+  .stat b { display:block; font-size:1.9rem; letter-spacing:-.02em; }
+  .stat span { font-size:.85rem; color:var(--dim); }
+  .civs { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  .civ { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .civ img { display:block; width:100%; height:auto; aspect-ratio:16/9; object-fit:cover; }
+  .civ div { padding:14px 16px 16px; }
+  .civ b { display:block; font-size:1.05rem; }
+  .civ p { margin:4px 0 8px; color:var(--dim); font-size:.9rem; }
+  .civ small { color:var(--gold); font-size:.78rem; letter-spacing:.04em; }
+  .faces { display:flex; gap:16px; flex-wrap:wrap; margin:0 0 26px; }
+  .faces img { width:120px; height:120px; object-fit:cover; border-radius:50%;
+               border:2px solid var(--line); }
+  .check { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); }
+  .check div { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--violet);
+               border-radius:10px; padding:14px 16px; }
+  .check b { display:block; margin-bottom:3px; }
+  .check span { color:var(--dim); font-size:.9rem; }
+  footer { border-top:1px solid var(--line); padding:38px 0 60px; color:var(--dim); font-size:.92rem; }
+  footer a { color:var(--gold); }
+  footer .row { display:flex; gap:22px; flex-wrap:wrap; margin-bottom:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="logo">DIVINE</div>
+  <nav><a href="support.html">Support</a><a href="privacy.html">Privacy</a></nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Watch.<br>Guide.<br><span class="accent">Judge.</span></h1>
+    <p class="tag">A god game on a small round world. Ten tribes light their fires, raise
+    their walls and send out their warriors — and you are the god above them, with a hand
+    that can lift a rock, call the rain, or carry a whole village's hope.</p>
+    <div class="cta">
+      <a class="primary" href="https://github.com/chanliu1983/tribefight-site/issues/new">Report a problem</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy policy</a>
+    </div>
+  </div>
+
+  <figure class="shot">
+    <img src="assets/01-title.jpg" width="1600" height="1000"
+         alt="The title screen: a small planet of islands and clouds in a violet nebula, coloured beams rising from the god stones of its tribes, and the word DIVINE over it.">
+  </figure>
+
+  <section>
+    <h2>A whole world you can turn in your hand</h2>
+    <p class="lede">The world is a planet you can see all of: islands, highlands and seas
+    wrapped round a sphere, with day sweeping across it and night following. Every tribe on
+    it lives by itself — they gather, cut wood, have children, grow old and are buried —
+    and none of them is waiting for you.</p>
+    <ul class="stat">
+      <li><b>10</b><span>tribes on every world</span></li>
+      <li><b>10</b><span>civilisations to play</span></li>
+      <li><b>50</b><span>story chapters</span></li>
+      <li><b>4</b><span>gods on one world (LAN)</span></li>
+    </ul>
+  </section>
+
+  <figure class="shot">
+    <img src="assets/08-tactical.jpg" width="1600" height="1000"
+         alt="The whole planet seen from space: green islands and blue seas under drifting clouds, the player's land glowing red around a village, the rival gods' beams rising from their villages.">
+    <figcaption>The map is the world itself. Pull back and the whole planet turns under you.</figcaption>
+  </figure>
+
+  <section>
+    <h2>Land is won with fire</h2>
+    <p class="lede">Your power over a place is the fire your people keep lit there. Fires cost
+    wood every dawn; relays carry your land out across the world, one ring at a time; and
+    where your rings meet a rival's, the side with more fire takes it — a god stone falls,
+    and a countdown starts.</p>
+    <div class="cols">
+      <div class="card">
+        <p class="who">Fire is power</p>
+        <p>Each lit campfire adds to the power of every ring joined to it. Five fires is what
+        one village can afford; more comes from more villages, joined.</p>
+      </div>
+      <div class="card">
+        <p class="who">Relays are reach</p>
+        <p>A relay is a signal fire on a hill. Chained ring to ring back to a village, it carries
+        your land — and your fire — toward the next one.</p>
+      </div>
+      <div class="card">
+        <p class="who">Warriors hold the ground</p>
+        <p>Warriors standing in a ring add to a claim or defend one. Behind the front, a war band
+        that outnumbers the defenders at a relay puts it out — and the chain beyond goes dark.</p>
+      </div>
+      <div class="card">
+        <p class="who">Walls and gates</p>
+        <p>Every village is ringed by a stone wall that follows the ground, with two gates. Shut
+        them and nothing passes — enemies must hack the doors down, under your towers.</p>
+      </div>
+    </div>
+  </section>
+
+  <figure class="shot">
+    <img src="assets/03-village.jpg" width="1600" height="1000"
+         alt="A village from above: houses inside a fieldstone wall with a red banner at its gate, a campfire burning, gulls overhead, and a rival's red land beyond the bay.">
+    <figcaption>A village and its wall. The ring beyond the bay is a rival's — and their relay is in reach.</figcaption>
+  </figure>
+
+  <section>
+    <h2>The god's hand</h2>
+    <p class="lede">You don't click on the world — you reach into it. The hand picks up a
+    miracle from the wheel and carries it: lower the land into the sea or raise a bridge out
+    of it, plant a forest, call the rain onto a fire, throw a rock, wrap your warriors in a
+    shield. Every miracle costs the faith your people give you.</p>
+    <div class="check">
+      <div><b>Push and Pull</b><span>Raise the sea floor into land, or sink a rival's relay into the water.</span></div>
+      <div><b>Forester</b><span>A forest where there was none — wood for the fires.</span></div>
+      <div><b>Rain</b><span>Puts out fires, burning warriors and enemy claims that needed them.</span></div>
+      <div><b>Rock, Fireball, Tornado</b><span>For when a relay has to go, or an army has to stop.</span></div>
+      <div><b>Shield and Heal</b><span>Keep your warriors standing through a fight.</span></div>
+      <div><b>Old gods' pillars</b><span>Four ancient beacons on every world. Reach one and it gives you faith every day.</span></div>
+    </div>
+  </section>
+
+  <figure class="shot">
+    <img src="assets/09-walls.jpg" width="1600" height="1000"
+         alt="A carved god stone, glowing, coming down onto a village in a claim, with the rival land and its relay on the hill behind.">
+    <figcaption>A claim landing: the god stone falls on the village it takes.</figcaption>
+  </figure>
+
+  <section>
+    <h2>Ten civilisations, fifty chapters</h2>
+    <p class="lede">The campaign is ten stories, one for each people, five chapters each — and
+    every one of them ends on a choice that is not easy. They are told the way old stories
+    were: as a picture book, a page at a time, read aloud.</p>
+    <div class="civs">
+      <div class="civ"><img src="assets/civ-yamatai.jpg" alt="Two young people of Wa on a hill over rice paddies and a village by the sea." loading="lazy">
+        <div><b>Yamatai</b><p>Islands of rice and mountain shrines, many villages under one queen who speaks with the sun.</p>
+        <small>The Sun's Daughter · The Hundred Mirrors · The Day the Sun Hid · A Mound of a Hundred Paces · The Clay Attendants</small></div></div>
+      <div class="civ"><img src="assets/civ-huaxia.jpg" alt="Terraced yellow earth along a great river." loading="lazy">
+        <div><b>Huaxia</b><p>The flowery people of the yellow river, children of Fuxi and Nuwa.</p>
+        <small>Yellow Earth · The Long Wall · The Rope and the Hand · Rain at Daze · Winter Clothes</small></div></div>
+      <div class="civ"><img src="assets/civ-athenai.jpg" alt="A city of marble below its hill." loading="lazy">
+        <div><b>Athenai</b><p>A city of marble and argument, watched over by the owl of the grey-eyed goddess.</p>
+        <small>The Empty Perch · The Second Ship · What the Owl Said · The Cup and the Boat · The Wine-Dark Sea</small></div></div>
+      <div class="civ"><img src="assets/civ-mexica.jpg" alt="A city rising from a lake on floating gardens." loading="lazy">
+        <div><b>Mexica</b><p>A city raised from the lake on floating fields and causeways.</p>
+        <small>The Floating Gardens · The Chalca Shore · The House Without a Door · The Binding of the Years · New Fire</small></div></div>
+      <div class="civ"><img src="assets/civ-roma.jpg" alt="The she-wolf by the river under the seven hills." loading="lazy">
+        <div><b>Roma</b><p>Seven hills by a river, raised by twins the she-wolf nursed — a city of law and roads.</p>
+        <small>The Wolf's Hill · The Latin Name · The Night of the Dogs · The Bridge on the Anio · Veseris</small></div></div>
+      <div class="civ"><img src="assets/civ-midgard.jpg" alt="A northern cliff over a fjord." loading="lazy">
+        <div><b>Midgard</b><p>Fjord folk of the cold north, whose fiercest warriors fight in the skin of the bear.</p>
+        <small>The Summer That Did Not Come · The Bear-Shirts · The Den Under the Snow · The Family Cliff · The Dragon Ships</small></div></div>
+      <div class="civ"><img src="assets/civ-eriu.jpg" alt="Standing stones in a misty grove." loading="lazy">
+        <div><b>Ériu</b><p>Green islands of mist and stone circles, where druids keep the old law.</p>
+        <small>The Mist and the Stones · The Guest at the Fire · The Body in the Bog · The Legate's Price · The Legions</small></div></div>
+      <div class="civ"><img src="assets/civ-bharata.jpg" alt="A wide plain by a sacred river." loading="lazy">
+        <div><b>Bharata</b><p>A great land of sacred rivers and monsoon rains, where sages seek the truth under the banyan.</p>
+        <small>The Late Rains · The Catch · The Bones in the Tank · Five Hundred · Where the Clouds Go</small></div></div>
+      <div class="civ"><img src="assets/civ-kemet.jpg" alt="The black land of the Nile between red deserts." loading="lazy">
+        <div><b>Kemet</b><p>The black land of the Nile between red deserts, where pharaohs build for eternity.</p>
+        <small>The Black Land · The Low Nile · The Mongoose in the Linen · A Basket of Figs · Sun and Moon</small></div></div>
+      <div class="civ"><img src="assets/civ-mongol.jpg" alt="Riders on the endless steppe under a wide sky." loading="lazy">
+        <div><b>Yeke Mongol</b><p>Riders of the endless blue steppe under the Eternal Sky, who hunt with white falcons.</p>
+        <small>Eight Silver Horses · The Seventy Cauldrons · The Winter of the Falcon · The White Banner · The Long Wall</small></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Told as a picture book</h2>
+    <p class="lede">Between the battles, the story is a page in an old book: a painted picture
+    in a frame, a voice reading it, and the page turning over when you're ready. Everyone who
+    speaks has a face and a voice of their own.</p>
+    <div class="faces">
+      <img src="assets/face-yamatai.jpg" alt="Queen Himiko of Yamatai, painted.">
+      <img src="assets/face-huaxia.jpg" alt="Fuxi, the sage of Huaxia, painted.">
+      <img src="assets/face-mongol.jpg" alt="Temujin of the Yeke Mongol, painted.">
+    </div>
+  </section>
+
+  <figure class="shot">
+    <img src="assets/07-story.jpg" width="1600" height="1000"
+         alt="A story page: a painted picture in an inked paper frame over the dimmed world, two young people of Wa above rice paddies, and the narration beneath it.">
+    <figcaption>"Long ago, on a string of islands at the edge of the eastern sea, lived the people of Wa."</figcaption>
+  </figure>
+
+  <section>
+    <h2>Play together</h2>
+    <p class="lede">Up to four gods on one world, each with a tribe of their own and the rest
+    run by rival gods. Host on your local network and friends find the game on theirs — or play
+    online with Game Center on the Mac App Store, or with your friends on Steam.</p>
+    <div class="cols">
+      <div class="card"><p class="role">LAN</p><p class="who">On the same network</p>
+        <p>Host a world; it shows up on everyone else's LAN screen. Or join by address.</p></div>
+      <div class="card"><p class="role">Mac App Store</p><p class="who">Game Center</p>
+        <p>Sign in, and Apple's matchmaker finds players or invites your friends.</p></div>
+      <div class="card"><p class="role">Steam</p><p class="who">Steam friends</p>
+        <p>Host for your friends and invite them from the overlay, or join from the friends list.</p></div>
+      <div class="card"><p class="role">Controller</p><p class="who">Made for a gamepad too</p>
+        <p>Every screen and every miracle works on a controller — on a Steam Deck the hand rides the right stick.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>More of the world</h2>
+    <div class="gallery">
+      <figure>
+        <img src="assets/05-fireworks.jpg" width="1600" height="1000" loading="lazy"
+             alt="Fireworks over a captured village.">
+        <figcaption>A village joins you: fireworks over its totem.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/06-gate.jpg" width="1600" height="1000" loading="lazy"
+             alt="A village wall of fieldstone and earth running to a shut wooden gate under a red banner.">
+        <figcaption>A gate shut. Click it to open it again.</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="row">
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy policy</a>
+    <a href="https://github.com/chanliu1983/tribefight-site/issues/new">Report a problem</a>
+  </div>
+  <p>© 2026 Tactic Master. Divine is made with the Godot Engine.</p>
+</footer>
+</div>
+</body>
+</html>
