@@ -21,5 +21,5 @@ pulled from anywhere.
 
 **Open an issue:** <https://github.com/chanliu1983/tribefight-site/issues/new>
 
-Say which version you play (Mac App Store, or Steam on Windows / macOS / Linux / Steam Deck),
-what you were doing, and — for a campaign — which civilisation and chapter.
+Say which version you play (App Store on iPhone / iPad / Mac, or Steam on Windows / macOS /
+Linux / Steam Deck), what you were doing, and — for a campaign — which civilisation and chapter.
